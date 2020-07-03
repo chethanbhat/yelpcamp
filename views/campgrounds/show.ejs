@@ -1,0 +1,63 @@
+<% include ../partials/header %>
+
+<div class="container">
+  <div class="row my-3">
+    <div class="col-md-8 col-sm-12">
+      <img class="img-fluid" src="<%= campground.image %>" />
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <h1 class="display-4"><%=campground.name%></h1>
+      <h3><strong>$<%= campground.price %>/night</strong></h3>
+      <p class="lead"><%= campground.description %></p>
+      <p>
+        <em>Submitted By </em>
+        <strong><%= campground.author.username %></strong>
+      </p>
+      <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
+      <a class="btn btn-warning" href="/campgrounds/<%= campground._id  %>/edit"
+        >Edit</a
+      >
+      <form
+        id="deleteForm"
+        action="/campgrounds/<%= campground._id %>?_method=DELETE"
+        method="POST"
+      >
+        <button class="btn btn-danger">Delete</button>
+      </form>
+      <% } %>
+    </div>
+  </div>
+  <div class="row">
+    <a
+      class="btn btn-success"
+      href="/campgrounds/<%= campground._id %>/comments/new"
+    >
+      Leave Feedback
+    </a>
+    <% campground.comments.forEach(comment =>{ %>
+    <div class="row">
+      <div class="col-md-12">
+        <strong><%= comment.author.username %></strong>
+        <span class="pull-right">10 days ago</span>
+        <p><%= comment.text %></p>
+        <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+        <a
+          class="btn btn-warning btn-xs"
+          href="<%= `/campgrounds/${campground._id}/comments/${comment.id}/edit` %>"
+          >Edit</a
+        >
+        <form
+          id="deleteForm"
+          action="<%= `/campgrounds/${campground._id}/comments/${comment.id}?_method=DELETE` %>"
+          method="POST"
+        >
+          <button class="btn btn-xs btn-danger">Delete</button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<% include ../partials/footer %>
